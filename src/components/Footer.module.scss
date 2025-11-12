@@ -1,0 +1,18 @@
+@use "./breakpoints.scss" as breakpoints;
+
+/* Ensure the footer content is centered horizontally on all viewports */
+.mobile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
+@media (max-width: breakpoints.$s) {
+    .mobile {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
