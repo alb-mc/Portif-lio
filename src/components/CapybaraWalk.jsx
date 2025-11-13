@@ -1,5 +1,6 @@
+"use client";
 import React from "react";
-import "./Capybara.css"; // o CSS da animação
+import "./CapybaraWalk.css";
 
 export default function CapybaraWalk() {
   return (
