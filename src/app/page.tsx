@@ -35,7 +35,7 @@ export default function Home() {
       gap="xl"
       paddingY="12"
       horizontal="center"
-      style={{ marginTop: '6rem' }}
+      style={{ marginTop: '3rem' }}
     >
       <Schema
         as="webPage"

@@ -9,13 +9,25 @@
   z-index: 9999;
 }
 
+/* Linha "chão" */
+.capybara-container::before {
+  content: "";
+  position: fixed;
+  bottom: 45px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 1;
+}
+
 .capybara {
   position: absolute;
   width: 100px;
   height: 100px;
   background-image: url("/capi-walk.png");
   background-repeat: no-repeat;
-  animation: walk 0.8s steps(8) infinite, move 12s linear infinite;
+  animation: walk 0.8s steps(8) infinite, move 20s linear infinite;
 }
 
 @keyframes walk {
