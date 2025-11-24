@@ -68,20 +68,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
         )}
 
-        {/* links and tags */}
-        <Flex gap="12" style={{ marginTop: 8, alignItems: "center" }}>
-          {content?.trim() && (
-            <SmartLink suffixIcon="arrowRight" style={{ margin: 0, width: "fit-content" }} href={href}>
-              <Text variant="body-default-s">Read case study</Text>
-            </SmartLink>
-          )}
-          {link && (
-            <SmartLink suffixIcon="arrowUpRightFromSquare" style={{ margin: 0, width: "fit-content" }} href={link}>
-              <Text variant="body-default-s">View project</Text>
-            </SmartLink>
-          )}
-        </Flex>
-
         {tags && tags.length > 0 && (
           <Row wrap gap="8" paddingTop="12">
             {tags.map((t, i) => (
