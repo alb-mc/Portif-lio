@@ -1,6 +1,6 @@
 import { Column, Heading, Meta, Schema } from "@once-ui-system/core";
 import { baseURL, blog, person } from "@/resources";
-import { Projects } from "@/components/work/Projects";
+import { Certificates } from "@/components/blog/Certificates";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -14,7 +14,6 @@ export async function generateMetadata() {
 
 export default function Blog() {
   return (
-    // Render Projects list in compact mode for Certifications
     <Column maxWidth="m" paddingTop="24">
       <Schema
         as="webPage"
@@ -32,7 +31,8 @@ export default function Blog() {
       <Heading marginBottom="l" variant="display-strong-xl" align="center">
         <span style={{ color: "#ffffff" }}>{blog.label}</span>
       </Heading>
-      <Projects compact={true} />
+      {/* Agora busca certificados da pasta blog/posts */}
+      <Certificates compact={true} />
     </Column>
   );
 }
