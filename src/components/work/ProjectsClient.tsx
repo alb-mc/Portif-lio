@@ -85,11 +85,12 @@ export default function ProjectsClient({ posts, compact = false }: Props) {
           <div
             key={post.slug}
             style={{
-              // 3 cards per row in compact mode (blog certificates)
+              // Responsive: 1 column on mobile, 2 on tablet, 3 on desktop
               flex: compact ? "1 1 calc(33.333% - 16px)" : "1 1 240px",
               maxWidth: compact ? "33.333%" : 260,
               minWidth: compact ? "280px" : "240px",
             }}
+            className="certificate-card-wrapper"
           >
             <ProjectCard
               priority={false}

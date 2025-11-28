@@ -107,3 +107,21 @@
     /* ensure transparent background preserved and image scales */
     display: inline-block;
   }
+
+  /* Mobile optimization for certificate cards */
+  @media (max-width: 768px) {
+    .certificate-card-wrapper {
+      flex: 1 1 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .certificate-card-wrapper {
+      flex: 1 1 calc(50% - 16px) !important;
+      max-width: 50% !important;
+      min-width: 280px !important;
+    }
+  }
+
