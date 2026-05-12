@@ -1,6 +1,7 @@
 import "@once-ui-system/core/css/styles.css";
 import "@once-ui-system/core/css/tokens.css";
 import "@/resources/custom.css";
+import AdminSecretButton from "@/components/AdminSecretButton";
 
 import classNames from "classnames";
 
@@ -13,8 +14,9 @@ import {
   RevealFx,
   SpacingToken,
 } from "@once-ui-system/core";
+
 import { Footer, Header, RouteGuard, Providers } from "@/components";
-import ContactButton from "@/components/ContactButton";
+import AdminAwareContactButton from "@/components/AdminAwareContactButton";
 import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
 
 export async function generateMetadata() {
@@ -53,9 +55,7 @@ export default async function RootLayout({
               (function() {
                 try {
                   const root = document.documentElement;
-                  const defaultTheme = 'system';
                   
-                  // Set defaults from config
                   const config = ${JSON.stringify({
                     brand: style.brand,
                     accent: style.accent,
@@ -69,13 +69,10 @@ export default async function RootLayout({
                     "viz-style": dataStyle.variant,
                   })};
                   
-                  // Apply default values
                   Object.entries(config).forEach(([key, value]) => {
                     root.setAttribute('data-' + key, value);
                   });
                   
-                  // Force dark-only theme for the site. We intentionally remove
-                  // client-side theme switching and saved light-mode values.
                   root.setAttribute('data-theme', 'dark');
                 } catch (e) {
                   console.error('Failed to initialize theme:', e);
@@ -86,6 +83,7 @@ export default async function RootLayout({
           }}
         />
       </head>
+
       <Providers>
         <Column
           as="body"
@@ -138,16 +136,22 @@ export default async function RootLayout({
               }}
             />
           </RevealFx>
+
           <Flex fillWidth minHeight="16" s={{ hide: true }} />
+
           <Header />
-          {/* Contact button centered under the header */}
-          <ContactButton />
+
+          <AdminAwareContactButton />
+
           <Flex zIndex={0} fillWidth padding="l" horizontal="center" flex={1}>
             <Flex horizontal="center" fillWidth minHeight="0">
               <RouteGuard>{children}</RouteGuard>
             </Flex>
           </Flex>
+
           <Footer />
+          
+          <AdminSecretButton />
         </Column>
       </Providers>
     </Flex>

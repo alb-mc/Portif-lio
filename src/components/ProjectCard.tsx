@@ -13,6 +13,8 @@ interface ProjectCardProps {
   avatars?: { src: string }[];
   link: string;
   tags?: string[];
+  issuer?: string;
+  publishedAt?: string;
 }
 
 function shortTitle(title: string, words = 5) {
@@ -30,26 +32,38 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   description,
   link,
   tags = [],
+  issuer,
+  publishedAt,
 }) => {
   const [hovered, setHovered] = useState(false);
   const cover = images && images.length > 0 ? images[0] : "";
+  
+  // Se tem link externo, usa ele, senão usa o href interno
+  const handleClick = () => {
+    if (link) {
+      window.open(link, "_blank", "noopener,noreferrer");
+    } else if (href) {
+      window.location.href = href;
+    }
+  };
 
   return (
     <div
+      onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        transform: hovered ? "scale(1.03)" : "scale(1)",
-        transition: "transform 180ms ease, box-shadow 180ms ease",
-        boxShadow: hovered ? "0 10px 30px rgba(0,0,0,0.6)" : "none",
         borderRadius: 12,
         overflow: "hidden",
         border: "1px solid rgba(255,255,255,0.04)",
         background: "var(--once-surface, #0b0b0b)",
+        cursor: link || href ? "pointer" : "default",
+        opacity: hovered ? 0.8 : 1,
+        transition: "opacity 200ms ease",
       }}
     >
       {/* image */}
-      <div style={{ width: "100%", height: 140, backgroundColor: "#111", backgroundSize: "cover", backgroundPosition: "center", backgroundImage: cover ? `url(${cover})` : undefined }} />
+      <div style={{ width: "100%", height: 200, backgroundColor: "#111", backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center", backgroundImage: cover ? `url(${cover})` : undefined }} />
 
       <Column fillWidth gap="s" style={{ padding: 16 }}>
         {/* short title above description, smaller font */}
@@ -59,28 +73,12 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </Heading>
         )}
 
-        {/* description below title; collapsed when not hovered */}
-        {description && (
-          <div style={{ overflow: "hidden", maxHeight: hovered ? 400 : 72, transition: "max-height 220ms ease" }}>
-            <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak">
-              {description}
-            </Text>
-          </div>
+        {/* issuer name in green below title */}
+        {issuer && (
+          <Text variant="body-default-xs" style={{ color: "#10b981", marginTop: "-4px" }}>
+            {issuer}
+          </Text>
         )}
-
-        {/* links and tags */}
-        <Flex gap="12" style={{ marginTop: 8, alignItems: "center" }}>
-          {content?.trim() && (
-            <SmartLink suffixIcon="arrowRight" style={{ margin: 0, width: "fit-content" }} href={href}>
-              <Text variant="body-default-s">Read case study</Text>
-            </SmartLink>
-          )}
-          {link && (
-            <SmartLink suffixIcon="arrowUpRightFromSquare" style={{ margin: 0, width: "fit-content" }} href={link}>
-              <Text variant="body-default-s">View project</Text>
-            </SmartLink>
-          )}
-        </Flex>
 
         {tags && tags.length > 0 && (
           <Row wrap gap="8" paddingTop="12">
@@ -90,6 +88,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               </Tag>
             ))}
           </Row>
+        )}
+
+        {/* published date in green below tags */}
+        {publishedAt && (
+          <Text variant="body-default-xs" style={{ color: "#10b981", marginTop: "8px" }}>
+            {publishedAt}
+          </Text>
         )}
       </Column>
     </div>
