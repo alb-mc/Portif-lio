@@ -93,7 +93,7 @@
     z-index: -1;
   }
   .contact-button:hover {
-    transform: translateX(-50%) scale(1.02);
+    transform: scale(1.05);
     box-shadow: 0 0 14px 4px rgba(111,148,241,0.14), 0 8px 24px rgba(0,0,0,0.7);
   }
   .contact-button:focus {
@@ -107,3 +107,21 @@
     /* ensure transparent background preserved and image scales */
     display: inline-block;
   }
+
+  /* Mobile optimization for certificate cards */
+  @media (max-width: 768px) {
+    .certificate-card-wrapper {
+      flex: 1 1 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .certificate-card-wrapper {
+      flex: 1 1 calc(50% - 16px) !important;
+      max-width: 50% !important;
+      min-width: 280px !important;
+    }
+  }
+

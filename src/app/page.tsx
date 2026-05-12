@@ -15,6 +15,7 @@ import { home, about, person, baseURL, routes } from "@/resources";
 import { Mailchimp } from "@/components";
 import { Projects } from "@/components/work/Projects";
 import { Posts } from "@/components/blog/Posts";
+import CapybaraWalk from "../components/CapybaraWalk";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -28,12 +29,13 @@ export async function generateMetadata() {
 
 export default function Home() {
   return (
+    <>
     <Column
       maxWidth="m"
       gap="xl"
       paddingY="12"
       horizontal="center"
-      style={{ marginTop: '6rem' }}
+      style={{ marginTop: '3rem' }}
     >
       <Schema
         as="webPage"
@@ -87,5 +89,8 @@ export default function Home() {
         </Column>
       </Column>
     </Column>
+    {/* Capivara andando no rodapé 🐹💨 */}
+    <CapybaraWalk />
+    </>
   );
 }

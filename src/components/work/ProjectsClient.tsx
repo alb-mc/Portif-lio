@@ -85,9 +85,12 @@ export default function ProjectsClient({ posts, compact = false }: Props) {
           <div
             key={post.slug}
             style={{
-              flex: compact ? "1 1 200px" : "1 1 240px",
-              maxWidth: compact ? 220 : 260,
+              // Responsive: 1 column on mobile, 2 on tablet, 3 on desktop
+              flex: compact ? "1 1 calc(33.333% - 16px)" : "1 1 240px",
+              maxWidth: compact ? "33.333%" : 260,
+              minWidth: compact ? "280px" : "240px",
             }}
+            className="certificate-card-wrapper"
           >
             <ProjectCard
               priority={false}
@@ -98,6 +101,8 @@ export default function ProjectsClient({ posts, compact = false }: Props) {
               content={post.content}
               tags={Array.isArray(post.metadata.tag) ? post.metadata.tag : post.metadata.tag ? [post.metadata.tag] : []}
               link={post.metadata.link || ""}
+              issuer={post.metadata.issuer || ""}
+              publishedAt={post.metadata.publishedAt || ""}
             />
           </div>
         ))}
