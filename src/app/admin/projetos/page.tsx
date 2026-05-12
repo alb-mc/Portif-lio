@@ -1,65 +1,75 @@
-import { buscarCertificadosVisiveis } from "@/lib/services/certificados";
+import Link from "next/link";
+import { buscarProjetosAdmin } from "@/lib/services/projetos";
 
-function formatarData(data: string | null) {
-  if (!data) {
-    return null;
-  }
-
-  const partes = data.split("-");
-
-  if (partes.length !== 3) {
-    return data;
-  }
-
-  const [ano, mes, dia] = partes;
-
-  return `${dia}/${mes}/${ano}`;
-}
-
-export default async function CertificationsPage() {
-  const certificados = await buscarCertificadosVisiveis();
+export default async function AdminProjetosPage() {
+  const projetos = await buscarProjetosAdmin();
 
   return (
     <main
       style={{
         width: "100%",
         minHeight: "60vh",
-        padding: "40px 16px 64px",
+        padding: "40px 16px",
         color: "#ffffff",
       }}
     >
       <div style={{ width: "100%", maxWidth: "1120px", margin: "0 auto" }}>
-        <header
+        <div
           style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "20px",
+            alignItems: "flex-start",
             marginBottom: "36px",
-            textAlign: "center",
+            flexWrap: "wrap",
           }}
         >
-          <h1
+          <div>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: "40px",
+                lineHeight: 1.1,
+                letterSpacing: "-0.04em",
+              }}
+            >
+              Projetos
+            </h1>
+
+            <p
+              style={{
+                marginTop: "10px",
+                marginBottom: 0,
+                color: "rgba(255,255,255,0.68)",
+                fontSize: "16px",
+                lineHeight: 1.5,
+              }}
+            >
+              Lista dos projetos cadastrados no Supabase.
+            </p>
+          </div>
+
+          <Link
+            href="/admin/projetos/novo"
             style={{
-              margin: 0,
-              fontSize: "clamp(44px, 7vw, 72px)",
-              lineHeight: 1,
-              letterSpacing: "-0.06em",
+              height: "44px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "0 18px",
+              borderRadius: "12px",
+              background: "#ffffff",
+              color: "#000000",
+              textDecoration: "none",
+              fontWeight: 800,
+              boxShadow: "0 16px 40px rgba(0,0,0,0.24)",
             }}
           >
-            Certifications
-          </h1>
+            Novo projeto
+          </Link>
+        </div>
 
-          <p
-            style={{
-              marginTop: "16px",
-              marginBottom: 0,
-              color: "rgba(255,255,255,0.72)",
-              fontSize: "18px",
-              lineHeight: 1.6,
-            }}
-          >
-            Certificados, cursos e formações que fazem parte da minha trajetória.
-          </p>
-        </header>
-
-        {certificados.length === 0 ? (
+        {projetos.length === 0 ? (
           <div
             style={{
               padding: "28px",
@@ -71,14 +81,9 @@ export default async function CertificationsPage() {
               textAlign: "center",
             }}
           >
-            <p
-              style={{
-                margin: 0,
-                color: "rgba(255,255,255,0.72)",
-                lineHeight: 1.6,
-              }}
-            >
-              Nenhum certificado publicado ainda.
+            <p style={{ margin: 0, color: "rgba(255,255,255,0.72)" }}>
+              Nenhum projeto encontrado. Clique em "Novo projeto" para cadastrar
+              o primeiro.
             </p>
           </div>
         ) : (
@@ -90,9 +95,9 @@ export default async function CertificationsPage() {
               justifyContent: "center",
             }}
           >
-            {certificados.map((certificado) => (
+            {projetos.map((projeto) => (
               <article
-                key={certificado.id}
+                key={projeto.id}
                 style={{
                   overflow: "hidden",
                   borderRadius: "20px",
@@ -105,7 +110,7 @@ export default async function CertificationsPage() {
                   width: "300px",
                 }}
               >
-                {certificado.imagem_certificado_url ? (
+                {projeto.imagem_capa_url ? (
                   <div
                     style={{
                       width: "100%",
@@ -115,8 +120,8 @@ export default async function CertificationsPage() {
                     }}
                   >
                     <img
-                      src={certificado.imagem_certificado_url}
-                      alt={certificado.titulo}
+                      src={projeto.imagem_capa_url}
+                      alt={projeto.titulo}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -163,7 +168,7 @@ export default async function CertificationsPage() {
                         letterSpacing: "-0.03em",
                       }}
                     >
-                      {certificado.titulo}
+                      {projeto.titulo}
                     </h2>
 
                     <p
@@ -175,24 +180,35 @@ export default async function CertificationsPage() {
                         fontWeight: 700,
                       }}
                     >
-                      {certificado.instituicao}
+                      Projeto
                     </p>
 
-                    {certificado.data_emissao ? (
-                      <p
-                        style={{
-                          marginTop: "9px",
-                          marginBottom: 0,
-                          color: "rgba(255,255,255,0.62)",
-                          fontSize: "13px",
-                        }}
-                      >
-                        Emitido em {formatarData(certificado.data_emissao)}
-                      </p>
-                    ) : null}
+                    <p
+                      style={{
+                        marginTop: "9px",
+                        marginBottom: 0,
+                        color: "rgba(255,255,255,0.62)",
+                        fontSize: "13px",
+                      }}
+                    >
+                      /work/{projeto.nome_url}
+                    </p>
+
+                    <p
+                      style={{
+                        marginTop: "8px",
+                        marginBottom: 0,
+                        color: "rgba(255,255,255,0.72)",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {projeto.visivel ? "Visível no site" : "Oculto no site"}
+                      {projeto.destaque ? " · Destaque" : ""}
+                    </p>
                   </div>
 
-                  {certificado.descricao_curta ? (
+                  {projeto.descricao_curta ? (
                     <p
                       style={{
                         margin: 0,
@@ -201,11 +217,11 @@ export default async function CertificationsPage() {
                         fontSize: "13px",
                       }}
                     >
-                      {certificado.descricao_curta}
+                      {projeto.descricao_curta}
                     </p>
                   ) : null}
 
-                  {certificado.tecnologias.length > 0 ? (
+                  {projeto.tecnologias.length > 0 ? (
                     <div
                       style={{
                         display: "flex",
@@ -214,7 +230,7 @@ export default async function CertificationsPage() {
                         marginTop: "auto",
                       }}
                     >
-                      {certificado.tecnologias.map((tecnologia) => (
+                      {projeto.tecnologias.map((tecnologia) => (
                         <span
                           key={tecnologia}
                           style={{
@@ -233,17 +249,21 @@ export default async function CertificationsPage() {
                     </div>
                   ) : null}
 
-                  {certificado.link_certificado ? (
-                    <a
-                      href={certificado.link_certificado}
-                      target="_blank"
-                      rel="noreferrer"
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      flexWrap: "wrap",
+                      marginTop: "4px",
+                    }}
+                  >
+                    <Link
+                      href={`/admin/projetos/${projeto.id}/editar`}
                       style={{
                         height: "38px",
                         display: "inline-flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        marginTop: "4px",
                         padding: "0 14px",
                         borderRadius: "10px",
                         background: "#ffffff",
@@ -251,11 +271,33 @@ export default async function CertificationsPage() {
                         textDecoration: "none",
                         fontWeight: 800,
                         fontSize: "14px",
+                        flex: "1 1 auto",
                       }}
                     >
-                      Ver certificado
-                    </a>
-                  ) : null}
+                      Editar
+                    </Link>
+
+                    <Link
+                      href={`/work/${projeto.nome_url}`}
+                      target="_blank"
+                      style={{
+                        height: "38px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "0 14px",
+                        borderRadius: "10px",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        color: "#ffffff",
+                        textDecoration: "none",
+                        fontWeight: 700,
+                        fontSize: "14px",
+                        background: "rgba(255,255,255,0.04)",
+                      }}
+                    >
+                      Ver
+                    </Link>
+                  </div>
                 </div>
               </article>
             ))}

@@ -22,6 +22,14 @@ const routes: RoutesConfig = {
   "/work": true,
   "/blog": true,
   "/gallery": true,
+  "/books": true,
+ 
+
+  "/admin": true,
+  "/admin/login": true,
+  "/admin/projetos": true,
+  "/admin/certificados": true,
+  "/admin/livros": true,
 };
 
 const display: DisplayConfig = {

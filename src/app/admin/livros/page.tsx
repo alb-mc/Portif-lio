@@ -1,65 +1,87 @@
-import { buscarCertificadosVisiveis } from "@/lib/services/certificados";
+import Link from "next/link";
+import { buscarLivrosAdmin } from "@/lib/services/livros";
 
-function formatarData(data: string | null) {
-  if (!data) {
-    return null;
-  }
+function formatarStatus(status: string) {
+  const mapa: Record<string, string> = {
+    lido: "Lido",
+    lendo: "Lendo",
+    quero_ler: "Quero ler",
+    pausado: "Pausado",
+    abandonado: "Abandonado",
+  };
 
-  const partes = data.split("-");
-
-  if (partes.length !== 3) {
-    return data;
-  }
-
-  const [ano, mes, dia] = partes;
-
-  return `${dia}/${mes}/${ano}`;
+  return mapa[status] ?? status;
 }
 
-export default async function CertificationsPage() {
-  const certificados = await buscarCertificadosVisiveis();
+export default async function AdminLivrosPage() {
+  const livros = await buscarLivrosAdmin();
 
   return (
     <main
       style={{
         width: "100%",
         minHeight: "60vh",
-        padding: "40px 16px 64px",
+        padding: "40px 16px",
         color: "#ffffff",
       }}
     >
       <div style={{ width: "100%", maxWidth: "1120px", margin: "0 auto" }}>
-        <header
+        <div
           style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "20px",
+            alignItems: "flex-start",
             marginBottom: "36px",
-            textAlign: "center",
+            flexWrap: "wrap",
           }}
         >
-          <h1
+          <div>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: "40px",
+                lineHeight: 1.1,
+                letterSpacing: "-0.04em",
+              }}
+            >
+              Livros
+            </h1>
+
+            <p
+              style={{
+                marginTop: "10px",
+                marginBottom: 0,
+                color: "rgba(255,255,255,0.68)",
+                fontSize: "16px",
+                lineHeight: 1.5,
+              }}
+            >
+              Lista dos livros cadastrados no Supabase.
+            </p>
+          </div>
+
+          <Link
+            href="/admin/livros/novo"
             style={{
-              margin: 0,
-              fontSize: "clamp(44px, 7vw, 72px)",
-              lineHeight: 1,
-              letterSpacing: "-0.06em",
+              height: "44px",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "0 18px",
+              borderRadius: "12px",
+              background: "#ffffff",
+              color: "#000000",
+              textDecoration: "none",
+              fontWeight: 800,
+              boxShadow: "0 16px 40px rgba(0,0,0,0.24)",
             }}
           >
-            Certifications
-          </h1>
+            Novo livro
+          </Link>
+        </div>
 
-          <p
-            style={{
-              marginTop: "16px",
-              marginBottom: 0,
-              color: "rgba(255,255,255,0.72)",
-              fontSize: "18px",
-              lineHeight: 1.6,
-            }}
-          >
-            Certificados, cursos e formações que fazem parte da minha trajetória.
-          </p>
-        </header>
-
-        {certificados.length === 0 ? (
+        {livros.length === 0 ? (
           <div
             style={{
               padding: "28px",
@@ -71,28 +93,23 @@ export default async function CertificationsPage() {
               textAlign: "center",
             }}
           >
-            <p
-              style={{
-                margin: 0,
-                color: "rgba(255,255,255,0.72)",
-                lineHeight: 1.6,
-              }}
-            >
-              Nenhum certificado publicado ainda.
+            <p style={{ margin: 0, color: "rgba(255,255,255,0.72)" }}>
+              Nenhum livro encontrado. Clique em "Novo livro" para cadastrar o
+              primeiro.
             </p>
           </div>
         ) : (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 300px))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 220px))",
               gap: "18px",
               justifyContent: "center",
             }}
           >
-            {certificados.map((certificado) => (
+            {livros.map((livro) => (
               <article
-                key={certificado.id}
+                key={livro.id}
                 style={{
                   overflow: "hidden",
                   borderRadius: "20px",
@@ -102,21 +119,24 @@ export default async function CertificationsPage() {
                   boxShadow: "0 24px 80px rgba(0,0,0,0.20)",
                   display: "flex",
                   flexDirection: "column",
-                  width: "300px",
+                  width: "220px",
                 }}
               >
-                {certificado.imagem_certificado_url ? (
+                {livro.imagem_capa_url ? (
                   <div
                     style={{
                       width: "100%",
-                      height: "200px",
+                      height: "300px",
                       overflow: "hidden",
                       background: "rgba(255,255,255,0.04)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     <img
-                      src={certificado.imagem_certificado_url}
-                      alt={certificado.titulo}
+                      src={livro.imagem_capa_url}
+                      alt={livro.titulo}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -129,7 +149,7 @@ export default async function CertificationsPage() {
                   <div
                     style={{
                       width: "100%",
-                      height: "200px",
+                      height: "300px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -141,7 +161,7 @@ export default async function CertificationsPage() {
                       padding: "24px",
                     }}
                   >
-                    Sem imagem
+                    Sem capa
                   </div>
                 )}
 
@@ -158,41 +178,43 @@ export default async function CertificationsPage() {
                     <h2
                       style={{
                         margin: 0,
-                        fontSize: "20px",
+                        fontSize: "18px",
                         lineHeight: 1.25,
                         letterSpacing: "-0.03em",
                       }}
                     >
-                      {certificado.titulo}
+                      {livro.titulo}
                     </h2>
+
+                    {livro.autor ? (
+                      <p
+                        style={{
+                          marginTop: "7px",
+                          marginBottom: 0,
+                          color: "rgba(255,255,255,0.62)",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {livro.autor}
+                      </p>
+                    ) : null}
 
                     <p
                       style={{
-                        marginTop: "7px",
+                        marginTop: "9px",
                         marginBottom: 0,
-                        color: "#00e676",
-                        fontSize: "14px",
+                        color: "rgba(255,255,255,0.72)",
+                        fontSize: "13px",
                         fontWeight: 700,
                       }}
                     >
-                      {certificado.instituicao}
+                      {formatarStatus(livro.status_leitura)}
+                      {livro.nota ? ` · Nota ${livro.nota}/5` : ""}
+                      {livro.visivel ? " · Visível" : " · Oculto"}
                     </p>
-
-                    {certificado.data_emissao ? (
-                      <p
-                        style={{
-                          marginTop: "9px",
-                          marginBottom: 0,
-                          color: "rgba(255,255,255,0.62)",
-                          fontSize: "13px",
-                        }}
-                      >
-                        Emitido em {formatarData(certificado.data_emissao)}
-                      </p>
-                    ) : null}
                   </div>
 
-                  {certificado.descricao_curta ? (
+                  {livro.descricao_curta ? (
                     <p
                       style={{
                         margin: 0,
@@ -201,11 +223,11 @@ export default async function CertificationsPage() {
                         fontSize: "13px",
                       }}
                     >
-                      {certificado.descricao_curta}
+                      {livro.descricao_curta}
                     </p>
                   ) : null}
 
-                  {certificado.tecnologias.length > 0 ? (
+                  {livro.categorias.length > 0 ? (
                     <div
                       style={{
                         display: "flex",
@@ -214,9 +236,9 @@ export default async function CertificationsPage() {
                         marginTop: "auto",
                       }}
                     >
-                      {certificado.tecnologias.map((tecnologia) => (
+                      {livro.categorias.map((categoria) => (
                         <span
-                          key={tecnologia}
+                          key={categoria}
                           style={{
                             padding: "5px 9px",
                             borderRadius: "999px",
@@ -227,35 +249,32 @@ export default async function CertificationsPage() {
                             fontWeight: 700,
                           }}
                         >
-                          {tecnologia}
+                          {categoria}
                         </span>
                       ))}
                     </div>
                   ) : null}
 
-                  {certificado.link_certificado ? (
-                    <a
-                      href={certificado.link_certificado}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        height: "38px",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginTop: "4px",
-                        padding: "0 14px",
-                        borderRadius: "10px",
-                        background: "#ffffff",
-                        color: "#000000",
-                        textDecoration: "none",
-                        fontWeight: 800,
-                        fontSize: "14px",
-                      }}
-                    >
-                      Ver certificado
-                    </a>
-                  ) : null}
+                  <Link
+                    href={`/admin/livros/${livro.id}/editar`}
+                    style={{
+                      height: "38px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: "4px",
+                      padding: "0 14px",
+                      borderRadius: "10px",
+                      border: "1px solid rgba(255,255,255,0.18)",
+                      color: "#ffffff",
+                      textDecoration: "none",
+                      fontWeight: 700,
+                      fontSize: "14px",
+                      background: "rgba(255,255,255,0.04)",
+                    }}
+                  >
+                    Editar
+                  </Link>
                 </div>
               </article>
             ))}

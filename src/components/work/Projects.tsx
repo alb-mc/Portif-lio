@@ -1,6 +1,5 @@
-import { getPosts } from "@/utils/utils";
-import { Column } from "@once-ui-system/core";
-import ProjectsClient from "./ProjectsClient";
+import { buscarProjetosVisiveis } from "@/lib/services/projetos";
+import ProjetosSupabaseClient from "./ProjetosSupabaseClient";
 
 interface ProjectsProps {
   range?: [number, number?];
@@ -8,21 +7,25 @@ interface ProjectsProps {
   compact?: boolean;
 }
 
-export function Projects({ range, exclude, compact }: ProjectsProps) {
-  let allProjects = getPosts(["src", "app", "work", "projects"]);
+export async function Projects({ range, exclude, compact }: ProjectsProps) {
+  let projetos = await buscarProjetosVisiveis();
 
-  // Exclude by slug (exact match)
   if (exclude && exclude.length > 0) {
-    allProjects = allProjects.filter((post) => !exclude.includes(post.slug));
+    projetos = projetos.filter((projeto) => !exclude.includes(projeto.nome_url));
   }
 
-  const sortedProjects = allProjects.sort((a, b) => {
-    return new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime();
+  const projetosOrdenados = projetos.sort((a, b) => {
+    return (
+      new Date(b.data_publicacao).getTime() -
+      new Date(a.data_publicacao).getTime()
+    );
   });
 
-  const displayedProjects = range
-    ? sortedProjects.slice(range[0] - 1, range[1] ?? sortedProjects.length)
-    : sortedProjects;
+  const projetosExibidos = range
+    ? projetosOrdenados.slice(range[0] - 1, range[1] ?? projetosOrdenados.length)
+    : projetosOrdenados;
 
-  return <ProjectsClient posts={displayedProjects} compact={!!compact} />;
+  return (
+    <ProjetosSupabaseClient projetos={projetosExibidos} compact={!!compact} />
+  );
 }
